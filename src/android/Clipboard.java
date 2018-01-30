@@ -24,7 +24,12 @@ public class Clipboard extends CordovaPlugin {
         if (action.equals(actionCopy)) {
             try {
                 String text = args.getString(0);
-                ClipData clip = ClipData.newPlainText("Text", text);
+                /**
+                * Changed on 30 JAN 2018 by Mayank & Karanveer
+                * It will now support Html content with links copy and paste
+                */
+                //ClipData clip = ClipData.newPlainText("Text", text);
+                ClipData clip = ClipData.newHtmlText("html", "", text);
 
                 clipboard.setPrimaryClip(clip);
 
@@ -37,7 +42,12 @@ public class Clipboard extends CordovaPlugin {
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.toString()));
             }
         } else if (action.equals(actionPaste)) {
-            if (!clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+            /**
+            * Changed on 30 JAN 2018 by Mayank & Karanveer
+            * It will now support Html content with links copy and paste
+            */            
+            //if (!clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+            if (!clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_HTML)) {
                 callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.NO_RESULT));
             }
 
