@@ -7,12 +7,26 @@
 
 - (void)copy:(CDVInvokedUrlCommand*)command {
 	[self.commandDelegate runInBackground:^{
-		UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-		NSString     *text       = [command.arguments objectAtIndex:0];
+		/**
+		* Changed on 30 JAN 2018 by Mayank & Karanveer
+		* It will now support Html content with links copy and paste
+		*/
 
-		[pasteboard setValue:text forPasteboardType:@"public.text"];
+		//UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+		//NSString     *text       = [command.arguments objectAtIndex:0];
 
-		CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:text];
+		//[pasteboard setValue:text forPasteboardType:@"public.text"];
+
+		//CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:text];
+		//[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+
+		NSString *html = [command.arguments objectAtIndex:0];
+		NSData *data =  [html dataUsingEncoding:NSUTF8StringEncoding];
+		NSDictionary *dict = @{@"WebMainResource": @{@"WebResourceData": data, @"WebResourceFrameName": @"", @"WebResourceMIMEType": @"text/html", @"WebResourceTextEncodingName": @"UTF-8", @"WebResourceURL": @"about:blank"}};
+		data = [NSPropertyListSerialization dataWithPropertyList:dict format:NSPropertyListXMLFormat_v1_0 options:0 error:nil];
+		NSString *archive = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		[UIPasteboard generalPasteboard].items = @[@{@"Apple Web Archive pasteboard type": archive}];
+		CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:archive];
 		[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 	}];
 }
