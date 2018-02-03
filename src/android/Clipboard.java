@@ -29,10 +29,9 @@ public class Clipboard extends CordovaPlugin {
                 * It will now support Html content with links copy and paste
                 */
                 //ClipData clip = ClipData.newPlainText("Text", text);
-                ClipData clip = ClipData.newHtmlText("html", "", text);
-
+                String plainText = text.replaceAll("\\<.*?\\>", "");
+                ClipData clip = ClipData.newHtmlText("html", plainText, text);
                 clipboard.setPrimaryClip(clip);
-
                 callbackContext.success(text);
 
                 return true;
