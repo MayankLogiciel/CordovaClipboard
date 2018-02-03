@@ -6,8 +6,8 @@ Clipboard management plugin for Cordova/PhoneGap that supports iOS, Android
 Original Plugin: https://github.com/VersoSolutions/CordovaClipboard
 
 We forked and updated this plugin to support HTML content copy & paste for both Android and iOS platform according to our needs
-
-
+1. Support added to copy html content
+2. Support added to copy/paste plain text from copied html content.
 
 
 ## Usage
