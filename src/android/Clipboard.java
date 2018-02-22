@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.ClipboardManager;
 import android.content.ClipData;
 import android.content.ClipDescription;
+import android.text.Html;
 
 public class Clipboard extends CordovaPlugin {
 
@@ -29,7 +30,7 @@ public class Clipboard extends CordovaPlugin {
                 * It will now support Html content with links copy and paste
                 */
                 //ClipData clip = ClipData.newPlainText("Text", text);
-                String plainText = text.replaceAll("\\<.*?\\>", "");
+                String plainText = Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY).toString();
                 ClipData clip = ClipData.newHtmlText("html", plainText, text);
                 clipboard.setPrimaryClip(clip);
                 callbackContext.success(text);
