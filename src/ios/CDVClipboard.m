@@ -26,11 +26,11 @@
 		NSDictionary *dict = @{@"WebMainResource": @{@"WebResourceData": data, @"WebResourceFrameName": @"", @"WebResourceMIMEType": @"text/html", @"WebResourceTextEncodingName": @"UTF-8", @"WebResourceURL": @"about:blank"}};
 		data = [NSPropertyListSerialization dataWithPropertyList:dict format:NSPropertyListXMLFormat_v1_0 options:0 error:nil];
 		NSString *archive = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-
-		NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"<[^>]+>" options:NSRegularExpressionCaseInsensitive error:nil];
-		NSString *plainText = [regex stringByReplacingMatchesInString:html options:0 range:NSMakeRange(0, [html length]) withTemplate:@""];
-
-		[UIPasteboard generalPasteboard].items = @[@{@"Apple Web Archive pasteboard type": archive, (id)kUTTypeUTF8PlainText: plainText}];
+		NSAttributedString *decodedString = [[NSAttributedString alloc] initWithData:data
+										     options:@{NSDocumentTypeDocumentAttribute:NSHTMLTextDocumentType}
+									  documentAttributes:NULL
+										       error:NULL];
+		[UIPasteboard generalPasteboard].items = @[@{@"Apple Web Archive pasteboard type": archive, (id)kUTTypeUTF8PlainText: [decodedString string]}];
 		CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:archive];
 		[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 	}];
